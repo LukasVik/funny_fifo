@@ -21,13 +21,34 @@ sys.path.insert(0, str(EXTERNAL_PATH / "hdl-registers" / "hdl-registers"))
 sys.path.insert(0, str(EXTERNAL_PATH / "tsfpga" / "tsfpga"))
 sys.path.insert(0, str(EXTERNAL_PATH / "vunit" / "vunit"))
 
-from tsfpga.module import get_module as get_module_tsfpga
+from tsfpga.build_project_list import BuildProjectList
+from tsfpga.examples.build_fpga_utils import arguments, collect_artifacts, setup_and_run
+from tsfpga.module import get_modules as get_modules_tsfpga
 
 if TYPE_CHECKING:
-    from tsfpga.module import BaseModule
+    from tsfpga.module_list import ModuleList
 
 
-def get_module() -> BaseModule:
-    return get_module_tsfpga(
-        name="pretty_fast_fifo", modules_folder=REPO_ROOT / "modules"
+def get_modules() -> ModuleList:
+    return get_modules_tsfpga(modules_folder=REPO_ROOT / "modules")
+
+
+def main() -> None:
+    """
+    Copied from tsfpga/examples/build_fpga.py.
+    """
+    args = arguments(default_temp_dir=REPO_ROOT / "generated")
+
+    modules = get_modules()
+    projects = BuildProjectList(
+        modules=modules,
+        project_filters=args.project_filters,
+        include_netlist_not_top_builds=args.netlist_builds,
+        no_color=args.no_color,
     )
+
+    sys.exit(setup_and_run(modules=modules, projects=projects, args=args))
+
+
+if __name__ == "__main__":
+    main()

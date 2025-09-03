@@ -5,7 +5,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
 
 use work.math_pkg.all;
 
@@ -14,8 +13,8 @@ entity pretty_fast_fifo is
   generic (
     -- Generics/parameters have to be uppercase to be set from cocotb.
     -- Unfortunately.
-    DATA_WIDTH : positive := 16;
-    FIFO_DEPTH : positive := 15
+    DATA_WIDTH : positive;
+    FIFO_DEPTH : positive
   );
   port (
     write_clock : in std_ulogic;

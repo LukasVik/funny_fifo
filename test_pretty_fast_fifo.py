@@ -23,10 +23,7 @@ from attr import dataclass
 from cocotb.triggers import RisingEdge, Timer, with_timeout
 from cocotb_tools.runner import get_runner
 
-REPO_ROOT = Path(__file__).parent
-sys.path.insert(0, str(REPO_ROOT.resolve()))
-
-from development_tools import get_module
+THIS_DIR = Path(__file__).parent
 
 
 @dataclass
@@ -194,12 +191,13 @@ def test_cocotb_runner(
 ) -> None:
     sim = os.getenv("SIM", "nvc")
 
-    module_path = REPO_ROOT / "modules" / "pretty_fast_fifo"
+    module_path = THIS_DIR / "modules" / "pretty_fast_fifo"
     sources = [
         # Manual compile order :(
         module_path / "src" / "math_pkg.vhd",
         module_path / "src" / "resync_hamming1.vhd",
         module_path / "src" / "pretty_fast_fifo.vhd",
+        module_path / "src" / "pretty_fast_fifo_no_ready.vhd",
     ]
 
     runner = get_runner(sim)
