@@ -1,0 +1,64 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "files.trimTrailingWhitespace": true,
+    "editor.rulers": [
+      100
+    ],
+    // ---------------------------------------------------------------------
+    "python.analysis.extraPaths": [
+      "external/tsfpga/tsfpga",
+      "external/hdl-registers/hdl-registers",
+      "external/hdl-modules/hdl-modules",
+      "external/vunit/vunit",
+    ],
+    "[python]": {
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+      },
+      "editor.defaultFormatter": "charliermarsh.ruff",
+    },
+    // ---------------------------------------------------------------------
+    // Spell check settings.
+    "cSpell.customDictionaries": {
+      "fpga-spelling-avalon": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/avalon.txt"
+      },
+      "fpga-spelling-axi": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/axi.txt"
+      },
+      "fpga-spelling-axi-stream": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/axi_stream.txt"
+      },
+      "fpga-spelling-common": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/common.txt"
+      },
+      "fpga-spelling-electrical": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/electrical.txt"
+      },
+      "fpga-spelling-other": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/other.txt"
+      },
+      "fpga-spelling-signal-processing": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/signal_processing.txt"
+      },
+      "fpga-spelling-tools": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/tools.txt"
+      },
+      "fpga-spelling-verilog": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/verilog.txt"
+      },
+      "fpga-spelling-vhdl": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/vhdl.txt"
+      },
+      "fpga-spelling-xilinx": {
+        "path": "${workspaceFolder}/../../fpga-spelling/fpga-spelling/xilinx.txt"
+      },
+    },
+  }
+}

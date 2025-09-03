@@ -1,6 +1,9 @@
-[submodule "external/hdl-modules/hdl-modules"]
-	path = external/hdl-modules/hdl-modules
-	url = git@github.com:hdl-modules/hdl-modules.git
 [submodule "external/tsfpga/tsfpga"]
 	path = external/tsfpga/tsfpga
 	url = git@github.com:tsfpga/tsfpga.git
+[submodule "external/hdl-registers/hdl-registers"]
+	path = external/hdl-registers/hdl-registers
+	url = git@github.com:hdl-registers/hdl-registers.git
+[submodule "external/vunit/vunit"]
+	path = external/vunit/vunit
+	url = git@github.com:VUnit/vunit.git
