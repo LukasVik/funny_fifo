@@ -198,6 +198,7 @@ def test_cocotb_runner(
         module_path / "src" / "resync_hamming1.vhd",
         module_path / "src" / "pretty_fast_fifo.vhd",
         module_path / "src" / "pretty_fast_fifo_no_ready.vhd",
+        module_path / "src" / "fpga_top.vhd",
     ]
 
     runner = get_runner(sim)

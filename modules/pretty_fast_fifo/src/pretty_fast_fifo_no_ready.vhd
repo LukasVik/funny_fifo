@@ -8,10 +8,8 @@ use ieee.std_logic_1164.all;
 
 entity pretty_fast_fifo_no_ready is
   generic (
-    -- Generics/parameters have to be uppercase to be set from cocotb.
-    -- Unfortunately.
-    DATA_WIDTH : positive;
-    FIFO_DEPTH : positive
+    data_width : positive;
+    fifo_depth : positive
   );
   port (
     write_clock : in std_ulogic;

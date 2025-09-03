@@ -63,6 +63,10 @@ architecture a of pretty_fast_fifo is
   type ram_t is array (ram_length - 1 downto 0) of std_ulogic_vector(data_width - 1 downto 0);
   signal ram : ram_t := (others => (others => '0'));
 
+  -- RAM shall be implemented as LUTRAM.
+  attribute ram_style : string;
+  attribute ram_style of ram : signal is "distributed";
+
 begin
 
   ------------------------------------------------------------------------------
@@ -124,7 +128,15 @@ begin
   write_ready <= '1' when (write_address_next /= read_address_resync) else '0';
   read_valid <= '1' when (read_address /= write_address_resync) else '0';
 
-  ram(to_integer(write_address)) <= write_data when rising_edge(write_clock);
+
+  ------------------------------------------------------------------------------
+  ram_process : process
+  begin
+    wait until rising_edge(write_clock);
+
+    ram(to_integer(write_address)) <= write_data;
+  end process;
+
   read_data <= ram(to_integer(read_address));
 
 end architecture;

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from tsfpga.constraint import Constraint
 from tsfpga.module import BaseModule
-from tsfpga.vivado.project import VivadoProject
+from tsfpga.vivado.project import VivadoNetlistProject, VivadoProject
 
 from development_tools import get_modules
 
@@ -27,11 +27,11 @@ class Module(BaseModule):
 
         projects.append(
             VivadoProject(
-                name="pretty_fast_fifo",
+                name="fifo_fpga",
                 modules=modules,
                 part=part,
-                top="pretty_fast_fifo",
-                generics={"data_width": 8, "fifo_depth": 7},
+                top="fpga_top",
+                generics={"data_width": 32, "fifo_depth": 7, "use_ready": True},
                 constraints=constraints,
                 defined_at=THIS_FILE,
             )
@@ -39,11 +39,35 @@ class Module(BaseModule):
 
         projects.append(
             VivadoProject(
+                name="fifo_fpga_no_ready",
+                modules=modules,
+                part=part,
+                top="fpga_top",
+                generics={"data_width": 32, "fifo_depth": 7, "use_ready": False},
+                constraints=constraints,
+                defined_at=THIS_FILE,
+            )
+        )
+
+        projects.append(
+            VivadoNetlistProject(
+                name="pretty_fast_fifo",
+                modules=modules,
+                part=part,
+                top="pretty_fast_fifo",
+                generics={"data_width": 32, "fifo_depth": 7},
+                constraints=constraints,
+                defined_at=THIS_FILE,
+            )
+        )
+
+        projects.append(
+            VivadoNetlistProject(
                 name="pretty_fast_fifo_no_ready",
                 modules=modules,
                 part=part,
                 top="pretty_fast_fifo_no_ready",
-                generics={"data_width": 8, "fifo_depth": 7},
+                generics={"data_width": 32, "fifo_depth": 7},
                 constraints=constraints,
                 defined_at=THIS_FILE,
             )
