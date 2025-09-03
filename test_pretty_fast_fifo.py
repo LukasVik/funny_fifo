@@ -194,11 +194,12 @@ def test_cocotb_runner(
 ) -> None:
     sim = os.getenv("SIM", "nvc")
 
+    module_path = REPO_ROOT / "modules" / "pretty_fast_fifo"
     sources = [
-        hdl_file.path
-        for hdl_file in get_module().get_simulation_files(
-            include_systemverilog_files=False
-        )
+        # Manual compile order :(
+        module_path / "src" / "math_pkg.vhd",
+        module_path / "src" / "resync_hamming1.vhd",
+        module_path / "src" / "pretty_fast_fifo.vhd",
     ]
 
     runner = get_runner(sim)
