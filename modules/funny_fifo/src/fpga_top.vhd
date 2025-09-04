@@ -11,7 +11,8 @@ entity fpga_top is
   generic (
     data_width : positive;
     fifo_depth : positive;
-    use_ready : boolean
+    use_handshake : boolean := false;
+    use_ip_core : boolean := false
   );
   port (
     write_clock : in std_ulogic;
@@ -82,15 +83,22 @@ begin
     write_ready_shift <= write_ready_int & write_ready_shift(write_ready_shift'high downto 1);
     write_valid_shift <= write_valid & write_valid_shift(write_valid_shift'high downto 1);
     write_data_shift <= write_data & write_data_shift(write_data_shift'high downto 1);
-
-    read_ready_shift <= read_ready & read_ready_shift(read_ready_shift'high downto 1);
-    read_valid_shift <= read_valid_int & read_valid_shift(read_valid_shift'high downto 1);
-    read_data_shift <= read_data_int & read_data_shift(read_data_shift'high downto 1);
   end process;
 
   write_ready <= write_ready_shift(0);
   write_valid_int <= write_valid_shift(0);
   write_data_int <= write_data_shift(0);
+
+
+  ------------------------------------------------------------------------------
+  read_shift_register : process
+  begin
+    wait until rising_edge(read_clock);
+
+    read_ready_shift <= read_ready & read_ready_shift(read_ready_shift'high downto 1);
+    read_valid_shift <= read_valid_int & read_valid_shift(read_valid_shift'high downto 1);
+    read_data_shift <= read_data_int & read_data_shift(read_data_shift'high downto 1);
+  end process;
 
   read_ready_int <= read_ready_shift(0);
   -- Reduce to just one bit so we don't have to have list so many package pins.
@@ -98,10 +106,10 @@ begin
 
 
   ------------------------------------------------------------------------------
-  select_ready_or_not : if use_ready generate
+  select_ready_or_not : if use_handshake generate
 
     ------------------------------------------------------------------------------
-    pretty_fast_fifo_inst : entity work.pretty_fast_fifo
+    funny_fifo_inst : entity work.funny_fifo_with_handshake
       generic map (
         data_width => data_width,
         fifo_depth => fifo_depth
@@ -120,10 +128,46 @@ begin
 
 
   ------------------------------------------------------------------------------
+  elsif use_ip_core generate
+
+    component vendor_fifo
+      port (
+        m_aclk : in std_logic;
+        s_aclk : in std_logic;
+        s_aresetn : in std_logic;
+        s_axis_tvalid : in std_logic;
+        s_axis_tready : out std_logic;
+        s_axis_tdata : in std_logic_vector(31 downto 0);
+        m_axis_tvalid : out std_logic;
+        m_axis_tready : in std_logic;
+        m_axis_tdata : out std_logic_vector(31 downto 0)
+      );
+    end component;
+
+  begin
+
+    ------------------------------------------------------------------------------
+    vendor_fifo_inst : vendor_fifo
+      port map (
+        s_aresetn => '1',
+        --
+        s_aclk => write_clock,
+        s_axis_tready => write_ready_int,
+        s_axis_tvalid => write_valid_int,
+        s_axis_tdata => write_data_int,
+        --
+        m_aclk => read_clock,
+        m_axis_tready => read_ready_int,
+        m_axis_tvalid => read_valid_int,
+        m_axis_tdata => read_data_int
+      );
+
+
+  ------------------------------------------------------------------------------
   else generate
 
     ------------------------------------------------------------------------------
-    pretty_fast_fifo_no_ready_inst : entity work.pretty_fast_fifo_no_ready
+    funny_fifo_inst : entity work.funny_fifo_no_handshake
       generic map (
         data_width => data_width,
         fifo_depth => fifo_depth

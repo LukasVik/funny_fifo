@@ -7,9 +7,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 use work.math_pkg.all;
+use work.funny_fifo_pkg.all;
 
 
-entity pretty_fast_fifo is
+entity funny_fifo_with_handshake is
   generic (
     -- Generics/parameters have to be uppercase to be set from cocotb.
     -- Unfortunately.
@@ -20,42 +21,24 @@ entity pretty_fast_fifo is
     write_clock : in std_ulogic;
     write_ready : out std_ulogic := '0';
     write_valid : in std_ulogic;
-    write_data : in std_ulogic_vector(data_width-1 downto 0);
+    write_data : in std_ulogic_vector(data_width - 1 downto 0);
     --
     read_clock : in std_ulogic;
     read_ready : in std_ulogic;
     read_valid : out std_ulogic := '0';
-    read_data : out std_ulogic_vector(data_width-1 downto 0) := (others => '0')
+    read_data : out std_ulogic_vector(data_width - 1 downto 0) := (others => '0')
   );
 end entity;
 
-architecture a of pretty_fast_fifo is
+architecture a of funny_fifo_with_handshake is
 
   constant ram_length : positive := fifo_depth + 1;
   constant address_width : natural := clog2(ram_length);
 
   subtype address_t is u_unsigned(address_width - 1 downto 0);
-  type address_lookup_t is array (ram_length - 1 downto 0) of address_t;
-
-  function get_next_address_lookup return address_lookup_t is
-    variable result : address_lookup_t := (others => (others => '0'));
-    variable this_address, next_address : address_t := (others => '0');
-  begin
-    while true loop
-      this_address := next_address;
-      next_address := address_t(to_gray(from_gray(std_ulogic_vector(this_address)) + 1));
-
-      result(to_integer(this_address)) := next_address;
-
-      if next_address = 0 then
-        -- We are pointing back to the start address, meaning we've gone through all addresses.
-        exit;
-      end if;
-    end loop;
-
-    return result;
-  end function;
-  constant next_address_lookup : address_lookup_t := get_next_address_lookup;
+  constant next_address_lookup : address_lookup_t := get_next_address_lookup(
+    address_width=>address_width
+  );
 
   signal write_address, write_address_next, read_address_resync : address_t := (others => '0');
   signal read_address, read_address_next, write_address_resync : address_t := (others => '0');

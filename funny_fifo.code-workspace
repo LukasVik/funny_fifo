@@ -10,6 +10,11 @@
     "editor.rulers": [
       100
     ],
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+      "**/.pytest_cache": true
+    },
     // ---------------------------------------------------------------------
     "python.analysis.extraPaths": [
       "external/tsfpga/tsfpga",

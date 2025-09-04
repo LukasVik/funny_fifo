@@ -2,15 +2,11 @@
 # Copyright (c) Lukas Vik. All rights reserved.
 # --------------------------------------------------------------------------------------------------
 
-from pathlib import Path
-
 from tsfpga.constraint import Constraint
 from tsfpga.module import BaseModule
 from tsfpga.vivado.project import VivadoNetlistProject, VivadoProject
 
-from development_tools import get_modules
-
-THIS_FILE = Path(__file__)
+from build_fpga import get_modules
 
 
 class Module(BaseModule):
@@ -27,49 +23,55 @@ class Module(BaseModule):
 
         projects.append(
             VivadoProject(
-                name="fifo_fpga",
+                name="fifo_fpga_no_handshake",
                 modules=modules,
                 part=part,
                 top="fpga_top",
-                generics={"data_width": 32, "fifo_depth": 7, "use_ready": True},
+                generics={"data_width": 32, "fifo_depth": 7},
                 constraints=constraints,
-                defined_at=THIS_FILE,
             )
         )
 
         projects.append(
             VivadoProject(
-                name="fifo_fpga_no_ready",
+                name="fifo_fpga_with_handshake",
                 modules=modules,
                 part=part,
                 top="fpga_top",
-                generics={"data_width": 32, "fifo_depth": 7, "use_ready": False},
+                generics={"data_width": 16, "fifo_depth": 7, "use_handshake": True},
                 constraints=constraints,
-                defined_at=THIS_FILE,
+            )
+        )
+
+        projects.append(
+            VivadoProject(
+                name="fifo_fpga_vendor",
+                modules=modules,
+                part=part,
+                top="fpga_top",
+                generics={"data_width": 32, "fifo_depth": 7, "use_ip_core": True},
             )
         )
 
         projects.append(
             VivadoNetlistProject(
-                name="pretty_fast_fifo",
+                name="funny_fifo_with_handshake",
                 modules=modules,
                 part=part,
-                top="pretty_fast_fifo",
+                top="funny_fifo_with_handshake",
                 generics={"data_width": 32, "fifo_depth": 7},
                 constraints=constraints,
-                defined_at=THIS_FILE,
             )
         )
 
         projects.append(
             VivadoNetlistProject(
-                name="pretty_fast_fifo_no_ready",
+                name="funny_fifo_no_handshake",
                 modules=modules,
                 part=part,
-                top="pretty_fast_fifo_no_ready",
+                top="funny_fifo_with_handshake",
                 generics={"data_width": 32, "fifo_depth": 7},
                 constraints=constraints,
-                defined_at=THIS_FILE,
             )
         )
 

@@ -4,7 +4,7 @@
 # Requires a development version of cocotb:
 #   python3 -m pip install --upgrade git+https://github.com/cocotb/cocotb.git
 # Run test cases with
-#   python3 -m pytest -v -n32 test_pretty_fast_fifo.py
+#   python3 -m pytest -v -n32 test_funny_fifo.py
 # Requires the NVC simulator available in PATH.
 # --------------------------------------------------------------------------------------------------
 
@@ -47,7 +47,14 @@ def main() -> None:
         no_color=args.no_color,
     )
 
-    sys.exit(setup_and_run(modules=modules, projects=projects, args=args))
+    sys.exit(
+        setup_and_run(
+            modules=modules,
+            projects=projects,
+            args=args,
+            collect_artifacts_function=collect_artifacts,
+        )
+    )
 
 
 if __name__ == "__main__":

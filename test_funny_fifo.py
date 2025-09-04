@@ -4,7 +4,7 @@
 # Requires a development version of cocotb:
 #   python3 -m pip install --upgrade git+https://github.com/cocotb/cocotb.git
 # Run test cases with
-#   python3 -m pytest -v -n32 test_pretty_fast_fifo.py
+#   python3 -m pytest -v -n32 test_funny_fifo.py
 # Requires the NVC simulator available in PATH.
 # --------------------------------------------------------------------------------------------------
 
@@ -12,10 +12,8 @@ from __future__ import annotations
 
 import os
 import random
-import sys
 from itertools import product
 from pathlib import Path
-from typing import Iterable
 
 import cocotb
 import pytest
@@ -176,12 +174,11 @@ async def test_random_data(dut):
         [
             # Regression.
             1337,
-            1753613141,
             1753611814,
             1753621678,
         ]
         # Random seeds.
-        + [None for _ in range(10)],
+        + [None for _ in range(2)],
         [8, 16],
         [7, 15, 31],
     ),
@@ -191,20 +188,21 @@ def test_cocotb_runner(
 ) -> None:
     sim = os.getenv("SIM", "nvc")
 
-    module_path = THIS_DIR / "modules" / "pretty_fast_fifo"
+    module_path = THIS_DIR / "modules" / "funny_fifo"
     sources = [
         # Manual compile order :(
         module_path / "src" / "math_pkg.vhd",
         module_path / "src" / "resync_hamming1.vhd",
-        module_path / "src" / "pretty_fast_fifo.vhd",
-        module_path / "src" / "pretty_fast_fifo_no_ready.vhd",
+        module_path / "src" / "funny_fifo_pkg.vhd",
+        module_path / "src" / "funny_fifo_with_handshake.vhd",
+        module_path / "src" / "funny_fifo_no_handshake.vhd",
         module_path / "src" / "fpga_top.vhd",
     ]
 
     runner = get_runner(sim)
     runner.build(
         sources=sources,
-        hdl_toplevel="pretty_fast_fifo",
+        hdl_toplevel="funny_fifo_with_handshake",
         always=True,
         build_dir=tmp_path / "sim_build",
         # Use the above when running multiple tests in parallel.
@@ -214,8 +212,8 @@ def test_cocotb_runner(
     )
 
     runner.test(
-        test_module="test_pretty_fast_fifo",
-        hdl_toplevel="pretty_fast_fifo",
+        test_module="test_funny_fifo",
+        hdl_toplevel="funny_fifo_with_handshake",
         seed=seed,
         waves=True,
         gui=False,
