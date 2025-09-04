@@ -1,0 +1,2 @@
+[libraries.pretty_fast_fifo]
+files = ['modules/pretty_fast_fifo/**/*.vhd']
