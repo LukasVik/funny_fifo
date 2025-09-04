@@ -196,29 +196,28 @@ def test_cocotb_runner(
         # Manual compile order :(
         module_path / "src" / "math_pkg.vhd",
         module_path / "src" / "resync_hamming1.vhd",
-        module_path / "src" / "pretty_fast_fifo_pkg.vhd",
-        module_path / "src" / "pretty_fast_fifo_with_handshake.vhd",
-        module_path / "src" / "pretty_fast_fifo_no_handshake.vhd",
+        module_path / "src" / "pretty_fast_fifo.vhd",
+        module_path / "src" / "pretty_fast_fifo_no_ready.vhd",
         module_path / "src" / "fpga_top.vhd",
     ]
 
     runner = get_runner(sim)
     runner.build(
         sources=sources,
-        hdl_toplevel="pretty_fast_fifo_with_handshake",
+        hdl_toplevel="pretty_fast_fifo",
         always=True,
-        # build_dir=tmp_path / "sim_build",
+        build_dir=tmp_path / "sim_build",
         # Use the above when running multiple tests in parallel.
         # Use the below when debugging to get a static waveform file location.
-        build_dir="sim_build",
+        # build_dir="sim_build",
         waves=True,
     )
 
     runner.test(
         test_module="test_pretty_fast_fifo",
-        hdl_toplevel="pretty_fast_fifo_with_handshake",
+        hdl_toplevel="pretty_fast_fifo",
         seed=seed,
         waves=True,
-        gui=True,
+        gui=False,
         parameters={"DATA_WIDTH": data_width, "FIFO_DEPTH": fifo_depth},
     )

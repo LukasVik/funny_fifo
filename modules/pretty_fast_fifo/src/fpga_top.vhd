@@ -101,7 +101,7 @@ begin
   select_ready_or_not : if use_ready generate
 
     ------------------------------------------------------------------------------
-    pretty_fast_fifo_inst : entity work.pretty_fast_fifo_with_handshake
+    pretty_fast_fifo_inst : entity work.pretty_fast_fifo
       generic map (
         data_width => data_width,
         fifo_depth => fifo_depth
@@ -123,7 +123,7 @@ begin
   else generate
 
     ------------------------------------------------------------------------------
-    pretty_fast_fifo_no_ready_inst : entity work.pretty_fast_fifo_no_handshake
+    pretty_fast_fifo_no_ready_inst : entity work.pretty_fast_fifo_no_ready
       generic map (
         data_width => data_width,
         fifo_depth => fifo_depth
