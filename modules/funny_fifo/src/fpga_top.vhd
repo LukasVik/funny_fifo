@@ -101,12 +101,12 @@ begin
   end process;
 
   read_ready_int <= read_ready_shift(0);
-  -- Reduce to just one bit so we don't have to have list so many package pins.
+  -- Reduce to just one bit so we don't need so many package pins.
   read_data <= (xor read_data_shift(0)) xor read_valid_shift(0);
 
 
   ------------------------------------------------------------------------------
-  select_ready_or_not : if use_handshake generate
+  select_dut : if use_handshake generate
 
     ------------------------------------------------------------------------------
     funny_fifo_inst : entity work.funny_fifo_with_handshake

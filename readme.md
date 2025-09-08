@@ -27,13 +27,12 @@ No carry chain, no binary-Gray-binary conversion, no separate FFs for binary and
 A single LUT.
 
 Beyond a depth of 63, the address lookup will require two LUTs per bit.
-A depth of 7 is still optimal, though, since it means that address comparisons fit in a single LUT.
 
 
 
 # Trade RAM utilization efficiency for a shorter critical path
 
-A traditional 8-depth FIFO represents 9 states using two 4-bit state (address) counters.
+A traditional 8-deep FIFO represents 9 states using two 4-bit state (address) counters.
 States: 0 words in FIFO (empty) through 8 words in FIFO (full).
 This is clearly an inefficient usage of the state counters, since 9 states are represented using 4 bits, which technically allows for 16 states.
 The upside is that data can be written to every location in the RAM, and the RAM can be truly "full".
@@ -78,6 +77,23 @@ If you need a greater capacity, 31 is a satisfyingly efficient step since
 
 
 
+# It doesn't have to be Gray
+
+Any coding scheme that has a Hamming distance of 1 between each step will work, not just Gray code.
+This is due to CDC-technical reasons covered in [this article](https://www.linkedin.com/pulse/reliable-cdc-constraints-2-counters-fifos-lukas-vik-ist5c/) and [this article](https://www.linkedin.com/pulse/reliable-cdc-constraints-5-asynchronous-fifo-lukas-vik-snlgf/) by me.
+The point is that you can experiment with some other coding if you want to.
+If you need `depth + 1` to be non-power-of-two, you probably have to.
+
+
+
+# What about synchronous FIFOs?
+
+I.e. normal single-clock FIFOs not used for clock domain crossing.
+I have not investigated it fully, but I have a hunch that address lookup instead of arithmetic is more efficient even in this case.
+Perhaps even for deep FIFOs (1024+).
+
+
+
 # Drawbacks
 
 Since binary-coded addresses are never available, you can not have a `level` out port.
@@ -91,7 +107,7 @@ Unless, of course, you want to convert your Gray code to binary code.
 Run with:
 
 ```
-python 3 -m pytest -n32 test_funny_fifo.py
+python 3 -m pytest -v -n32 test_funny_fifo.py
 ```
 
 Requires cocotb version 2+ (currently in development).

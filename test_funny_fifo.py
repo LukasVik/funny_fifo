@@ -12,12 +12,12 @@ from __future__ import annotations
 
 import os
 import random
+from dataclasses import dataclass
 from itertools import product
 from pathlib import Path
 
 import cocotb
 import pytest
-from attr import dataclass
 from cocotb.triggers import RisingEdge, Timer, with_timeout
 from cocotb_tools.runner import get_runner
 
@@ -169,10 +169,10 @@ async def test_random_data(dut):
 
 
 @pytest.mark.parametrize(
-    "seed,data_width,fifo_depth",
+    "seed, data_width, fifo_depth",
     product(
         [
-            # Regression.
+            # Regression seeds.
             1337,
             1753611814,
             1753621678,
@@ -186,20 +186,18 @@ async def test_random_data(dut):
 def test_cocotb_runner(
     seed: int | None, data_width: int, fifo_depth: int, tmp_path: Path
 ) -> None:
-    sim = os.getenv("SIM", "nvc")
-
-    module_path = THIS_DIR / "modules" / "funny_fifo"
+    src_path = THIS_DIR / "modules" / "funny_fifo" / "src"
     sources = [
         # Manual compile order :(
-        module_path / "src" / "math_pkg.vhd",
-        module_path / "src" / "resync_hamming1.vhd",
-        module_path / "src" / "funny_fifo_pkg.vhd",
-        module_path / "src" / "funny_fifo_with_handshake.vhd",
-        module_path / "src" / "funny_fifo_no_handshake.vhd",
-        module_path / "src" / "fpga_top.vhd",
+        src_path / "math_pkg.vhd",
+        src_path / "resync_hamming1.vhd",
+        src_path / "funny_fifo_pkg.vhd",
+        src_path / "funny_fifo_with_handshake.vhd",
+        src_path / "funny_fifo_no_handshake.vhd",
+        src_path / "fpga_top.vhd",
     ]
 
-    runner = get_runner(sim)
+    runner = get_runner(simulator_name=os.getenv("SIM", "nvc"))
     runner.build(
         sources=sources,
         hdl_toplevel="funny_fifo_with_handshake",
