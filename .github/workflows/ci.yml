@@ -1,5 +1,39 @@
-- uses: nickg/setup-nvc@99621f5fd967e42a6b25df67d3c4bb43463ea7e7 # v1
-  with:
-    version: latest
-- run: |
-    nvc --version
+name: ci
+
+
+# ------------------------------------------------------------------------------
+on:
+  # Run when a pull request is opened or updated.
+  pull_request:
+  # Add possibility of running manually from webpage.
+  workflow_dispatch:
+
+
+# ------------------------------------------------------------------------------
+jobs:
+
+  simulate:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        # VUnit sub-packages are not needed, so save a little time by not doing recursive.
+        submodules: 'true'
+
+    - name: Setup NVC
+      uses: nickg/setup-nvc@v1
+      with:
+        version: latest
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Python dependencies
+      run: python3 -m pip install pytest git+https://github.com/cocotb/cocotb.git
+
+    - name: Run unit tests
+      run: python3 -m pytest test_funny_fifo.py
