@@ -1,0 +1,5 @@
+- uses: nickg/setup-nvc@99621f5fd967e42a6b25df67d3c4bb43463ea7e7 # v1
+  with:
+    version: latest
+- run: |
+    nvc --version
