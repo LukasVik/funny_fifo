@@ -86,19 +86,22 @@ If you need `depth + 1` to be non-power-of-two, you probably have to.
 
 
 
+# Drawbacks
+
+Since binary-coded addresses are never available, you can not have a `level` out port.
+Or `almost_full` or `almost_empty` status signals.
+Unless, of course, you want to convert your Gray code to binary code.
+
+
+
 # What about synchronous FIFOs?
 
 I.e. normal single-clock FIFOs not used for clock domain crossing.
 I have not investigated it fully, but I have a hunch that address lookup instead of arithmetic is more efficient even in this case.
 Perhaps even for deep FIFOs (1024+).
 
-
-
-# Drawbacks
-
-Since binary-coded addresses are never available, you can not have a `level` out port.
-Or `almost_full` or `almost_empty` status signals.
-Unless, of course, you want to convert your Gray code to binary code.
+In this case, you would not need a Gray-coded address sequence; A normal binary coding would work.
+Meaning, you could have the `level` port, etc.
 
 
 
@@ -122,4 +125,3 @@ Run with:
 ```
 python 3 build_fpga.py --list
 ```
-
