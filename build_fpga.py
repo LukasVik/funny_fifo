@@ -1,12 +1,6 @@
 # --------------------------------------------------------------------------------------------------
 # Copyright (c) Lukas Vik. All rights reserved.
 # --------------------------------------------------------------------------------------------------
-# Requires a development version of cocotb:
-#   python3 -m pip install --upgrade git+https://github.com/cocotb/cocotb.git
-# Run test cases with
-#   python3 -m pytest -v -n32 test_funny_fifo.py
-# Requires the NVC simulator available in PATH.
-# --------------------------------------------------------------------------------------------------
 
 from __future__ import annotations
 
