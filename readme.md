@@ -72,7 +72,7 @@ both fit in a single 6-input LUT each.
 If you need a greater capacity, 31 is a satisfyingly efficient step since
 
 1. the `write_ready`/`read_valid` expression fits in two LUTs (10 inputs), and
-2. the `write_add`/`read_addr` expression fits precisely in two LUTs (11 inputs), and
+2. the `write_address`/`read_address` expression fits precisely in two LUTs (11 inputs), and
 3. the RAM fits precisely in one LUTRAM per bit.
 
 
@@ -110,7 +110,7 @@ Meaning, you could have the `level` port, etc.
 Run with:
 
 ```
-python 3 -m pytest -v -n32 test_funny_fifo.py
+python3 -m pytest -v -n32 test_funny_fifo.py
 ```
 
 Requires cocotb version 2+ (currently in development).
@@ -123,5 +123,5 @@ Full test build available with constraints.
 Run with:
 
 ```
-python 3 build_fpga.py --list
+python3 build_fpga.py --list
 ```
