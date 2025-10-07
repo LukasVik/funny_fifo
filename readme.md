@@ -125,3 +125,10 @@ Run with:
 ```
 python3 build_fpga.py --list
 ```
+
+
+
+# License
+
+This project is released under the terms of the MIT License.
+See [license.md](license.md) for details.
